@@ -3,9 +3,15 @@ resource "aws_instance" "terrafom" {
   instance_type = var.instance_type
   ami           = var.ami_id
 
-  tags = {
-    Name = var.instance_names[count.index]
-  }
+  #   tags = {
+  #     Name = var.instance_names[count.index]
+  #   }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = var.instance_names[count.index]
+    }
+  )
 
 }
 
@@ -30,9 +36,11 @@ resource "aws_security_group" "sg_group" {
     cidr_blocks      = ["0.0.0.0/0"] # Allow from everyone
     ipv6_cidr_blocks = ["::/0"]
   }
-
-  tags = {
-    Name = "Allow All SSH"
-  }
+  tags = merge(
+    var.common_tags,
+    {
+      Name = "Allow SSH"
+    }
+  )
 }
 
